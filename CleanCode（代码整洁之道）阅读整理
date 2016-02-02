@@ -1,1 +1,82 @@
 
+用命名常亮替代魔术数
+例如：double milesWalked=feetWalked/5280.0;
+Math.PI ...
+这里的5280.0没用常量名代替，是因为有的时候直接的数字瞅着更直观，所以也并不是所有的魔术数都要用命名常亮代替。
+
+准确
+在代码做决定时，确认自己足够准确，明确自己为什么要这么做，如果遇到异常应该如何处理
+例如：可以用List的时候非要用ArrayList就过分拘束了，把所有变量设置为protected却不够自律。
+
+封装条件
+如果没有if或者while语句的上下文，布尔逻辑很难理解。应该把条件意图抽象出来。
+例如：if（shouldBeDeleted(timer)）要好于if(timer.hasExpired..)
+
+避免否定条件
+否定式要比肯定式难明白一些，所以，尽可能用肯定是
+例如：if(buffer.shouldCompact())要好于if(!buffer.shouldCompact())
+
+函数只该做一件事
+转为多个更小的函数每个只做一件事
+
+掩蔽时序耦合
+有必要使用时序耦合，但不要掩盖他。排列函数参数，好让他们被调用的次序显而易见。
+例如：
+public class MoogDiver{
+Gradient gradient;
+List<Spline> splines;
+public void dive(String reason){
+saturateGradient();
+reticulataSplines();
+diveForMoog(reason);
+}
+}
+这三个函数的执行次序很重要，但是代码并没有使用强制的时序耦合。可能会在调用s之前调用了r，导致跑出了异常，更好的方式：
+public class MoogDiver{
+Gradient gradient;
+List<Spline> splines;
+public void dive(String reason){
+Gradient gradient=saturateGradient();
+List<Spline> splines=reticulataSplines();
+diveForMoog(splines,reason);
+}
+}这样就没有理由不按顺序调用了
+
+封装边界条件
+例如一些+1 -1的方法封装起来，不要到处可见
+if(m+1<n){
+n-1...
+}
+改为：
+int nextlevel=level+1;
+
+函数应该只在一个抽象层级上
+不要让函数在多个抽象层操作
+
+在较高层级放置可配置数据
+public static void main(String[] args) throws Exception{
+Arguments arguments=...
+..
+}
+public class Arguments{
+public static final String DEFAULT_PATH="..";
+public static final String DEFAULT_ROOT="..";
+public static final String DEFAULT_VERSION_NUMBER="..";
+}
+
+避免传递浏览
+我们不想让某个模块了解太多其协作者的信息。例如A，B合作,B 和 C合作，不想让A和C互相了解
+墨泰尔律
+在A和B B和C之间加个D模块，通过D模块调用
+
+
+
+
+
+
+
+
+
+
+
+
